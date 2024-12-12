@@ -15,3 +15,4 @@ int main() {
     std::cout <<  decodeKey(CURSEFORGE_API_KEY) << "\n";   
     return 0;
 }
+
