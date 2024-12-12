@@ -25,6 +25,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(cfapi)
 
+# Get environment variable "CURSEFORGE_API_KEY" and set it as a preprocessor definition
+if (DEFINED ENV{CURSEFORGE_API_KEY})
+    set(CURSEFORGE_API_KEY $ENV{CURSEFORGE_API_KEY})
+    add_compile_definitions(CURSEFORGE_API_KEY="${CURSEFORGE_API_KEY}")
+else()
+    message(FATAL_ERROR "CURSEFORGE_API_KEY environment variable not set")
+endif()
+
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 file(GLOB_RECURSE HEADERS "include/*.hpp")
 
