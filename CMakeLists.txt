@@ -5,11 +5,11 @@ set(PROJECT_VERSION 1.0.0)
 
 project(${PROJECT_NAME} VERSION ${PROJECT_VERSION} LANGUAGES CXX)
 
-find_program(CCACHE_FOUND ccache)
-if (CCACHE_FOUND)
-    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
-    set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
-endif()
+# find_program(CCACHE_FOUND ccache)
+# if (CCACHE_FOUND)
+#     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+#     set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+# endif()
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -29,3 +29,4 @@ file(GLOB_RECURSE HEADERS "include/*.hpp")
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 target_include_directories(${PROJECT_NAME} PRIVATE "include")
+target_link_libraries(${PROJECT_NAME} PRIVATE curseforge::static)
