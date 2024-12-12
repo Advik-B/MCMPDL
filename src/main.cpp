@@ -3,6 +3,9 @@
 #include <sstream>
 #include <elzip.hpp>
 #include <filesystem>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <modpack.hpp>
 
 namespace fs = std::filesystem;
 
@@ -16,17 +19,10 @@ std::string decodeKey(const std::string& encodedKey) {
 }
 
 int main() {
-    std::cout <<  decodeKey(CURSEFORGE_API_KEY) << "\n";   
-    // elz::extractFile("test.zip", "test.txt");
-    try {
-        // Get the path to the temporary directory
-        fs::path tempPath = fs::temp_directory_path();
-        std::cout << tempPath / "mcmpdl";
-        
-        std::cout << "Temporary directory: " << tempPath << std::endl;
-    } catch (const fs::filesystem_error& e) {
-        std::cerr << "Error getting temp directory: " << e.what() << std::endl;
-    }
+    std::cout <<  decodeKey(CURSEFORGE_API_KEY) << "\n";
+    auto logger = spdlog::stdout_color_mt("mcmpdl");
+    mcmpdl::CurseForgeModpack modpack("asdas", logger);
+    modpack.init();
     return 0;
 }
 

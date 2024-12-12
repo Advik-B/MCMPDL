@@ -3,26 +3,20 @@
 #include <nlohmann/json.hpp>
 #include <vector>
 #include <CurseMod.hpp>
+#include <spdlog/spdlog.h>
 
 namespace mcmpdl {
     using std::string;
     using json = nlohmann::json;
-    class ModPackExtractor {
-        public:
-            ModPackExtractor(string);
-            virtual void init();
-            virtual void extract(string, bool);
 
-    };
-
-    class CurseForgeModpack : public ModPackExtractor {
+    class CurseForgeModpack {
         public:
-            CurseForgeModpack(string);
-            void init() override;
-            void extract(string, bool) override;
+            CurseForgeModpack(json, std::shared_ptr<spdlog::logger>);
+            void init();
+            void extract(string);
         private:
-            string path_or_url;
             json manifest;
-            std::vector<cf::CurseMod> mods;            
+            std::vector<cf::CurseMod> mods;
+            std::shared_ptr<spdlog::logger> logger;
     };
 }
