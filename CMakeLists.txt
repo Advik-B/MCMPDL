@@ -33,9 +33,11 @@ else()
     message(FATAL_ERROR "CURSEFORGE_API_KEY environment variable not set")
 endif()
 
+add_subdirectory(extern/11zip)
+
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 file(GLOB_RECURSE HEADERS "include/*.hpp")
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 target_include_directories(${PROJECT_NAME} PRIVATE "include")
-target_link_libraries(${PROJECT_NAME} PRIVATE curseforge::static)
+target_link_libraries(${PROJECT_NAME} PRIVATE curseforge::static elzip)

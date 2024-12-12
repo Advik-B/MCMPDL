@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <elzip.hpp>
 
 std::string decodeKey(const std::string& encodedKey) {
     std::string key;
