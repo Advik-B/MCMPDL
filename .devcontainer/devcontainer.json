@@ -1,4 +1,13 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/cpp:latest",
-  "features": { }
+  "name": "Development Container",
+  "image": "mcr.microsoft.com/devcontainers/base:debian",
+  "features": {
+    "ghcr.io/devcontainers/features/ccache:1": {},
+    "ghcr.io/devcontainers/features/cmake:1": {},
+    "ghcr.io/devcontainers/features/ninja:1": {},
+    "ghcr.io/devcontainers/features/clangd:1": {
+      "version": "latest"
+    }
+  },
+  "postCreateCommand": "apt-get update && apt-get install -y clang cmake ninja-build ccache"
 }
