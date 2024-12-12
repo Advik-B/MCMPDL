@@ -25,6 +25,13 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(cfapi)
 
+FetchContent_Declare(
+    spdlog
+    GIT_REPOSITORY https://github.com/gabime/spdlog.git
+    GIT_TAG        v1.15.0
+)
+FetchContent_MakeAvailable(spdlog)
+
 # Get environment variable "CURSEFORGE_API_KEY" and set it as a preprocessor definition
 if (DEFINED ENV{CURSEFORGE_API_KEY})
     set(CURSEFORGE_API_KEY $ENV{CURSEFORGE_API_KEY})
@@ -40,4 +47,4 @@ file(GLOB_RECURSE HEADERS "include/*.hpp")
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 target_include_directories(${PROJECT_NAME} PRIVATE "include")
-target_link_libraries(${PROJECT_NAME} PRIVATE curseforge::static elzip)
+target_link_libraries(${PROJECT_NAME} PRIVATE curseforge::static elzip spdlog::spdlog)
