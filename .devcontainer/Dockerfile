@@ -1,5 +1,5 @@
 # Base image
-FROM mcr.microsoft.com/devcontainers/base:dev-ubuntu-24.04
+FROM mcr.microsoft.com/devcontainers/cpp:dev
 
 # Set non-interactive mode for apt-get
 ENV DEBIAN_FRONTEND=noninteractive
