@@ -4,6 +4,7 @@
 
 std::string decodeKey(const std::string& encodedKey) {
     std::string key;
+    key.reserve(60);
     for (char c : encodedKey) {
         key += c ^ 0x55; // Simple XOR with 0x55
     }
@@ -11,6 +12,6 @@ std::string decodeKey(const std::string& encodedKey) {
 }
 
 int main() {
-    std::cout <<  decodeKey(CURSEFORGE_API_KEY) << std::endl;   
+    std::cout <<  decodeKey(CURSEFORGE_API_KEY) << "\n";   
     return 0;
 }
