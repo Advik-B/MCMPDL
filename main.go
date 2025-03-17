@@ -1,6 +1,6 @@
 package main
 
-import "github.com/Advik-B/MCMPDL/curseforge"
+import "MCMPDL/curseforge"
 
 func main() {
 	curseforge.Main()
