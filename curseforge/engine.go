@@ -1,23 +1,66 @@
 package curseforge
 
 import (
+	badger "github.com/dgraph-io/badger/v4"
 	"io"
 	"net/http"
 	"net/url"
 )
 
 type API struct {
-	apiKey     string
-	user_agent string
-	baseUrl    string
+	apiKey      string
+	user_agent  string
+	baseUrl     string
+	using_cache bool
+	cache       *badger.DB
+	memcache    bool
 }
 
-func NewAPI(apiKey string) *API {
-	return &API{
-		apiKey:     apiKey,
-		user_agent: "",
-		baseUrl:    "https://api.curseforge.com/",
+func NewAPI(apiKey string, use_cache bool, use_memory_cache bool) (*API, error) {
+	newAPI := &API{
+		apiKey:      apiKey,
+		user_agent:  "",
+		baseUrl:     "https://api.curseforge.com/",
+		using_cache: use_cache,
+		cache:       nil,
+		memcache:    use_memory_cache,
 	}
+	err := newAPI.init()
+	if err != nil {
+		return nil, err
+	}
+	return newAPI, nil
+}
+
+func (self *API) init() error {
+	if self.using_cache {
+		if self.memcache {
+			return self.initMemCache()
+		} else {
+			return self.initDiskCache()
+		}
+	}
+	return nil
+}
+
+func (self *API) initMemCache() error {
+	options := badger.DefaultOptions("").WithInMemory(true)
+	db, err := badger.Open(options)
+	if err != nil {
+		return err
+	}
+	self.cache = db
+	return nil
+}
+
+func (self *API) initDiskCache() error {
+	options := badger.DefaultOptions("curseforge_cache")
+	db, err := badger.Open(options)
+	if err != nil {
+		return err
+	}
+	self.cache = db
+	return nil
 }
 
 func (self *API) SetUserAgent(user_agent string) {
@@ -29,6 +72,7 @@ func (self *API) Fetch(path string) (data []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
+	// TODO: Add cache support
 	return self.FetchRaw(url_to_fetch)
 }
 
