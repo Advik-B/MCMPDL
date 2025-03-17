@@ -1,6 +1,0 @@
-{
-  "name": "Custom DevContainer",
-  "build": {
-    "dockerfile": "Dockerfile"
-  }
-}
