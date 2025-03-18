@@ -16,10 +16,6 @@ func NewService(api *API) *Service {
 	}
 }
 
-type _GameResponse struct {
-	Data schemas.Game `json:"data"`
-}
-
 func (s *Service) GetGames() ([]schemas.Game, error) {
 	var gamesResponse struct {
 		Data []schemas.Game `json:"data"`
@@ -36,7 +32,9 @@ func (s *Service) GetGames() ([]schemas.Game, error) {
 }
 
 func (s *Service) GetGame(gameId int) (schemas.Game, error) {
-	gameResponse := _GameResponse{}
+	gameResponse := struct {
+		Data schemas.Game `json:"data"`
+	}{}
 	res, err := s.api.Fetch("/v1/games/" + strconv.Itoa(gameId))
 	if err != nil {
 		return gameResponse.Data, err
