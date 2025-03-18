@@ -72,8 +72,50 @@ func (self *API) Fetch(path string) (data []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	// TODO: Add cache support
-	return self.FetchRaw(url_to_fetch)
+
+	// Check cache first
+	if self.using_cache {
+		cachedData, err := self.getFromCache(url_to_fetch)
+		if err == nil {
+			return cachedData, nil // Return cached response
+		}
+	}
+
+	// Fetch from API
+	data, err = self.FetchRaw(url_to_fetch)
+	if err != nil {
+		return nil, err
+	}
+
+	// Store response in cache
+	if self.using_cache {
+		_ = self.saveToCache(url_to_fetch, data)
+	}
+
+	return data, nil
+}
+
+// Retrieve data from cache
+func (self *API) getFromCache(key string) ([]byte, error) {
+	var value []byte
+	err := self.cache.View(func(txn *badger.Txn) error {
+		item, err := txn.Get([]byte(key))
+		if err != nil {
+			return err
+		}
+		return item.Value(func(val []byte) error {
+			value = append([]byte{}, val...) // Copy data
+			return nil
+		})
+	})
+	return value, err
+}
+
+// Save data to cache
+func (self *API) saveToCache(key string, value []byte) error {
+	return self.cache.Update(func(txn *badger.Txn) error {
+		return txn.Set([]byte(key), value)
+	})
 }
 
 func (self *API) FetchRaw(url string) (data []byte, err error) {
