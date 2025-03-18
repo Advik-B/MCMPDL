@@ -13,12 +13,12 @@ func Main() {
 		panic(err)
 	}
 	//fmt.Println(api) // NOTE: NEVER DO THIS UNLESS YOU WANT YOUR API KEY TO BE LEAKED
-	service := service.New(api)
-	//games, _ := service.GetGames()
+	service_ := service.New(api)
+	//games, _ := service_.GetGames()
 	//for _, game := range games.Data {
 	//	fmt.Printf("%d: "+game.Name+"\n", game.Id)
 	//}
 	//
-	game, x := service.GetGame(432)
+	game, x := service_.GetGame(432)
 	fmt.Println(game, x)
 }
