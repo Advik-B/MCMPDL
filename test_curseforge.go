@@ -2,7 +2,7 @@ package main
 
 import (
 	"MCMPDL/curseforge"
-	service2 "MCMPDL/curseforge/service"
+	"MCMPDL/curseforge/service"
 	"fmt"
 	"os"
 )
@@ -13,7 +13,7 @@ func Main() {
 		panic(err)
 	}
 	//fmt.Println(api) // NOTE: NEVER DO THIS UNLESS YOU WANT YOUR API KEY TO BE LEAKED
-	service := service2.New(api)
+	service := service.New(api)
 	//games, _ := service.GetGames()
 	//for _, game := range games.Data {
 	//	fmt.Printf("%d: "+game.Name+"\n", game.Id)
