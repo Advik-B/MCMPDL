@@ -5,7 +5,18 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"os"
+	"path"
 )
+
+type APIError struct {
+	StatusCode int
+	Status     string
+}
+
+func (A APIError) Error() string {
+	return A.Status
+}
 
 type API struct {
 	apiKey      string
@@ -54,7 +65,8 @@ func (self *API) initMemCache() error {
 }
 
 func (self *API) initDiskCache() error {
-	options := badger.DefaultOptions("curseforge_cache")
+	tempPath := path.Join(os.TempDir(), "curseforge_cache")
+	options := badger.DefaultOptions(tempPath)
 	db, err := badger.Open(options)
 	if err != nil {
 		return err
@@ -128,6 +140,7 @@ func (self *API) FetchRaw(url string) (data []byte, err error) {
 	}
 	res.Header.Set("Accept", "application/json")
 	res.Header.Set("x-api-key", self.apiKey)
+	res.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
 
@@ -135,10 +148,16 @@ func (self *API) FetchRaw(url string) (data []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		return nil, &APIError{resp.StatusCode, resp.Status}
+	}
 
 	// Read the response body
 	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	err = resp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
