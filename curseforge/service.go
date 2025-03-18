@@ -3,6 +3,7 @@ package curseforge
 import (
 	"MCMPDL/curseforge/schemas"
 	"encoding/json"
+	"strconv"
 )
 
 type Service struct {
@@ -15,28 +16,34 @@ func NewService(api *API) *Service {
 	}
 }
 
-func (s *Service) GetGames() (schemas.GetGamesResponse, error) {
-	games := schemas.GetGamesResponse{}
+type GameResponse struct {
+	Data schemas.Game `json:"data"`
+}
+
+func (s *Service) GetGames() ([]schemas.Game, error) {
+	var gamesResponse struct {
+		Data []schemas.Game `json:"data"`
+	}
 	res, err := s.api.Fetch("/v1/games")
 	if err != nil {
-		return games, err
+		return nil, err
 	}
-	err = json.Unmarshal(res, &games)
+	err = json.Unmarshal(res, &gamesResponse)
 	if err != nil {
-		return games, err
+		return nil, err
 	}
-	return games, nil
+	return gamesResponse.Data, nil
 }
 
 func (s *Service) GetGame(gameId int) (schemas.Game, error) {
-	game := schemas.Game{}
-	res, err := s.api.Fetch("/v1/games/" + string(gameId))
+	gameResponse := GameResponse{}
+	res, err := s.api.Fetch("/v1/games/" + strconv.Itoa(gameId))
 	if err != nil {
-		return game, err
+		return gameResponse.Data, err
 	}
-	err = json.Unmarshal(res, &game)
+	err = json.Unmarshal(res, &gameResponse)
 	if err != nil {
-		return game, err
+		return gameResponse.Data, err
 	}
-	return game, nil
+	return gameResponse.Data, nil
 }
