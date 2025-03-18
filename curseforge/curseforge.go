@@ -1,7 +1,19 @@
 package curseforge
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 func Main() {
-	fmt.Println("Hello from curseforge")
+	api, err := NewAPI(os.Getenv("CURSEFORGE_API_KEY"), true, false)
+	if err != nil {
+		panic(err)
+	}
+	//fmt.Println(api) // NOTE: NEVER DO THIS UNLESS YOU WANT YOUR API KEY TO BE LEAKED
+	service := NewService(api)
+	games, _ := service.GetGames()
+	for _, game := range games.Data {
+		fmt.Printf("%d: "+game.Name+"\n", game.Id)
+	}
 }
