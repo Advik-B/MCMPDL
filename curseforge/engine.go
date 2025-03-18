@@ -135,7 +135,12 @@ func (self *API) FetchRaw(url string) (data []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			panic(err)
+		}
+	}(resp.Body)
 
 	// Read the response body
 	body, err := io.ReadAll(resp.Body)
